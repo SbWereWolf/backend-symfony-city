@@ -7,17 +7,23 @@ use App\Console;
 $app = new Silly\Application;
 $app->useContainer($container, true);
 
-$app->command('file:parser file', Console\FileParserCommand::class)
+$app->command('file:parser file',
+    Console\FileParserCommand::class)
     ->descriptions('Парсинг файла выгрузки', [
         'file'   => 'Имя файла'
     ]);
 
 if ($_SERVER['APP_ENV'] == 'dev') {
-    $app->command('file:generator file [--lines=]', Console\FileGeneratorCommand::class)
+    $app->command('file:generator file [--lines=]',
+        Console\FileGeneratorCommand::class)
         ->descriptions('Генерация файла выгрузки', [
-            'file'   => 'Имя файла',
+            'file' => 'Имя файла',
             '--lines' => 'Сколько строк необходимо сгенерировать?'
         ]);
 }
 
-$app->run();
+try {
+    $app->run();
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
