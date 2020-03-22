@@ -3,10 +3,11 @@
 namespace App\Provider;
 
 use App\Interfaces\EntityInterface;
-use App\Interfaces\ProviderInterface;
+use App\Interfaces\FileProviderInterface;
 use App\IsEntityClass;
+use DirectoryIterator;
 
-class FileProvider implements ProviderInterface
+class FileProvider implements FileProviderInterface
 {
     use IsEntityClass;
 
@@ -68,7 +69,7 @@ class FileProvider implements ProviderInterface
     {
         $id = 0;
 
-        foreach (new \DirectoryIterator($dir) as $file) {
+        foreach (new DirectoryIterator($dir) as $file) {
             if ($file->isDot()) {
                 continue;
             }

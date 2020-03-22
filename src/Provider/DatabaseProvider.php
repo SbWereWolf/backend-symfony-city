@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
 namespace App\Provider;
+use App\Interfaces\DatabaseProviderInterface;
 use App\Interfaces\EntityInterface;
-use App\Interfaces\ProviderInterface;
 use App\IsEntityClass;
 use PDO;
 
-class DatabaseProvider implements ProviderInterface
+class DatabaseProvider implements DatabaseProviderInterface
 {
     use IsEntityClass;
 
@@ -45,6 +45,7 @@ class DatabaseProvider implements ProviderInterface
     {
         $this->isEntityClass($entity);
 
+        /* @var EntityInterface $entity */
         return (bool) $this->pdo->query('DELETE FROM ' . $entity::getSource());
     }
 

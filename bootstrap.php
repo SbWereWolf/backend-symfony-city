@@ -2,8 +2,8 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Dotenv\Dotenv;
 
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
@@ -49,20 +49,37 @@ array_map(
         App\Provider\FileProvider::class
     ]
 );
-$container->setAlias(App\Interfaces\ProviderInterface::class, App\Provider\FileProvider::class);
-
-$repos = [
-    App\Repository\CityRepository::class => App\Entity\City::class,
-    App\Repository\UserRepository::class => App\Entity\User::class
+$container->setAlias(App\Interfaces\FileProviderInterface::class, App\Provider\FileProvider::class);
+$fileRepos = [
+    App\Repository\CityFileRepository::class => App\Entity\City::class,
+    App\Repository\UserFileRepository::class => App\Entity\User::class
 ];
 array_walk(
-    $repos,
+    $fileRepos,
     fn($entity, $repo) => $container->autowire($repo, $repo)
         ->setPublic(true)
         ->addTag(App\Interfaces\RepositoryInterface::class)
         ->setArguments([
             '$provider' => new Symfony\Component\DependencyInjection\Reference(
-                App\Interfaces\ProviderInterface::class
+                App\Interfaces\FileProviderInterface::class
+            ),
+            '$entity' => $entity,
+        ])
+);
+
+$container->setAlias(App\Interfaces\DatabaseProviderInterface::class, App\Provider\DatabaseProvider::class);
+$dbRepos = [
+    App\Repository\CityDatabaseRepository::class => App\Entity\City::class,
+    App\Repository\UserDatabaseRepository::class => App\Entity\User::class,
+];
+array_walk(
+    $dbRepos,
+    fn($entity, $repo) => $container->autowire($repo, $repo)
+        ->setPublic(true)
+        ->addTag(App\Interfaces\RepositoryInterface::class)
+        ->setArguments([
+            '$provider' => new Symfony\Component\DependencyInjection\Reference(
+                App\Interfaces\DatabaseProviderInterface::class
             ),
             '$entity' => $entity,
         ])

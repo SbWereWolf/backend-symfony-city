@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Entity\City;
 use App\Entity\User;
-use App\Repository\CityRepository;
-use App\Repository\UserRepository;
+use App\Repository\CityFileRepository;
+use App\Repository\UserFileRepository;
+use DomainException;
+use stdClass;
 
 class Parser
 {
@@ -13,7 +15,7 @@ class Parser
     private $userRepository;
     private $counter = 0;
 
-    public function __construct(CityRepository $cityRepository, UserRepository $userRepository)
+    public function __construct(CityFileRepository $cityRepository, UserFileRepository $userRepository)
     {
         $this->cityRepository = $cityRepository;
         $this->userRepository = $userRepository;
@@ -31,7 +33,7 @@ class Parser
         }
 
         if (!feof($oFile)) {
-            throw new \DomainException('Конец файла не достигнут');
+            throw new DomainException('Конец файла не достигнут');
         }
         fclose($oFile);
 
@@ -49,14 +51,15 @@ class Parser
 
         return false;
     }
-    private function saveData(\stdClass $data): ?City
+
+    private function saveData(stdClass $data): ?City
     {
         $city = new City($data->name, $data->country);
         if ($this->cityRepository->insert($city) === false) {
             return null;
         }
 
-        foreach($data->users as $user) {
+        foreach ($data->users as $user) {
             $user = new User($user->name, $user->phone);
             if ($this->userRepository->insert($user, ['city_id' => $city->getId()]) !== false) {
                 $city->attachUser($user);
