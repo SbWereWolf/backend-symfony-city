@@ -11,13 +11,13 @@ abstract class Entity implements Interfaces\EntityInterface
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return (string) json_encode($this->toArray(),JSON_THROW_ON_ERROR);
+        return (string)json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 }

@@ -18,38 +18,6 @@ class FileProvider implements FileProviderInterface
         $this->makeStorage();
     }
 
-    public function insert(EntityInterface $entity, array $fields = []) : ?int
-    {
-        $storage = $this->resolveStorage($entity::getSource());
-        if (!is_dir($storage)) {
-            @mkdir($storage);
-        }
-
-        $id = $this->resolveNextId($storage);
-
-        $data = array_merge($entity->toArray(false), $fields);
-        if (file_put_contents($storage.$id, serialize($data))) {
-            return $id;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param EntityInterface $entity
-     */
-    public function clear(string $entity): bool
-    {
-        $this->isEntityClass($entity);
-
-        foreach(glob($this->resolveStorage($entity::getSource()).'*') as $file)
-        {
-            unlink($file);
-        }
-
-        return true;
-    }
-
     private function makeStorage()
     {
         $storage = $this->resolveStorage('');
@@ -62,10 +30,28 @@ class FileProvider implements FileProviderInterface
 
     private function resolveStorage(string $source = '')
     {
-        return rtrim(VAR_DIR.$this->storage.$source, '/').'/';
+        return rtrim(VAR_DIR . $this->storage . $source, '/') . '/';
     }
 
-    private function resolveNextId(string $dir) : int
+    public function insert(
+        EntityInterface $entity, array $fields = []): ?int
+    {
+        $storage = $this->resolveStorage($entity::getSource());
+        if (!is_dir($storage)) {
+            @mkdir($storage);
+        }
+
+        $id = $this->resolveNextId($storage);
+
+        $data = array_merge($entity->toArray(false), $fields);
+        if (file_put_contents($storage . $id, serialize($data))) {
+            return $id;
+        }
+
+        return null;
+    }
+
+    private function resolveNextId(string $dir): int
     {
         $id = 0;
 
@@ -78,5 +64,20 @@ class FileProvider implements FileProviderInterface
         }
 
         return $id + 1;
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    public function clear(string $entity): bool
+    {
+        $this->isEntityClass($entity);
+
+        foreach (glob($this->resolveStorage(
+                $entity::getSource()) . '*') as $file) {
+            unlink($file);
+        }
+
+        return true;
     }
 }

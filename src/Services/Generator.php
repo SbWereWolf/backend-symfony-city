@@ -25,11 +25,13 @@ class Generator
         }
 
         for ($i = 1; $i <= $lines; $i++) {
-            $city = new City($this->faker->city, $this->faker->country);
+            $city = new City(
+                $this->faker->city, $this->faker->country);
             $users = $this->faker->numberBetween(1, 100);
             do {
                 $city->attachUser(
-                    new User($this->faker->name, $this->faker->phoneNumber)
+                    new User(
+                        $this->faker->name, $this->faker->phoneNumber)
                 );
             } while (--$users > 0);
 
@@ -43,8 +45,9 @@ class Generator
         return $size === false ? null : $size;
     }
 
-    private function save(City $city, $oFile) : bool
+    private function save(City $city, $oFile): bool
     {
-        return is_resource($oFile) && fwrite($oFile, (string)$city . PHP_EOL);
+        return is_resource($oFile)
+            && fwrite($oFile, (string)$city . PHP_EOL);
     }
 }

@@ -7,7 +7,8 @@ use App\Repository;
 
 class UserFileRepository extends Repository
 {
-    public function __construct(FileProviderInterface $provider, string $entity)
+    public function __construct(
+        FileProviderInterface $provider, string $entity)
     {
         parent::__construct($provider, $entity);
     }

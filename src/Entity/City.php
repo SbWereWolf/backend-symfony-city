@@ -17,24 +17,19 @@ class City extends BaseEntity
         $this->country = $state;
     }
 
-    public function getName(): string
+    public static function getSource(): string
     {
-        return $this->name;
+        return 'cities';
     }
 
-    public function getCountry(): string
+    public static function getNameKey(): string
     {
-        return $this->country;
+        return 'name';
     }
 
     public function attachUser(User $user): void
     {
         $this->users[] = $user;
-    }
-
-    public function getUsers(): array
-    {
-        return $this->users;
     }
 
     public function toArray(bool $withRelations = true): array
@@ -45,19 +40,25 @@ class City extends BaseEntity
         ];
 
         if ($withRelations) {
-            $data['users'] = array_map(fn(User $user) => $user->toArray(), $this->getUsers());
+            $data['users'] = array_map(
+                fn(User $user) => $user->toArray(), $this->getUsers());
         }
 
         return $data;
     }
 
-    public static function getSource(): string
+    public function getName(): string
     {
-        return 'cities';
+        return $this->name;
     }
 
-    public static function getNameKey(): string
+    public function getCountry(): string
     {
-        return 'name';
+        return $this->country;
+    }
+
+    public function getUsers(): array
+    {
+        return $this->users;
     }
 }

@@ -78,8 +78,14 @@ class Parser
 
         foreach ($data->users as $user) {
             $user = new User($user->name, $user->phone);
-            if ($this->fileForUser->insert($user, [$user::getParentKey() => $city->getId()]) !== false
-                && $this->dbForUser->insert($user, [$user::getParentKey() => $city->getId()]) !== false) {
+            $isSuccess = $this->fileForUser->insert($user,
+                    [$user::getParentKey() => $city->getId()])
+                !== false;
+            $isSuccess = $isSuccess
+                && $this->dbForUser->insert($user,
+                    [$user::getParentKey() => $city->getId()])
+                !== false;
+            if ($isSuccess) {
                 $city->attachUser($user);
             }
         }

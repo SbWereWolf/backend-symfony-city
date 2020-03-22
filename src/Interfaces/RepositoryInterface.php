@@ -4,7 +4,9 @@ namespace App\Interfaces;
 
 interface RepositoryInterface
 {
-    public function bindEntity(string $entity) : void;
-    public function clear() : bool;
-    public function insert(EntityInterface &$entity) : bool;
+    public function bindEntity(string $entity): void;
+
+    public function clear(): bool;
+
+    public function insert(EntityInterface &$entity): bool;
 }

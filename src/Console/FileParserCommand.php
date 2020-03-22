@@ -36,7 +36,9 @@ class FileParserCommand
         $this->cleaner->clearRepositories();
 
         $file = $input->getArgument('file');
-        $output->writeln(sprintf('Подождите, идет обработка файла <info>%s</info>', $file));
+        $output->writeln(sprintf(
+            'Подождите, идет обработка файла <info>%s</info>',
+            $file));
 
         $result = $this->parser->__invoke($file);
         $payload = $this->reporter->__invoke();

@@ -9,14 +9,10 @@ class User extends BaseEntity
     private string $name;
     private string $phone;
 
-    public function getName(): string
+    public function __construct(string $name, string $phone)
     {
-        return $this->name;
-    }
-
-    public function getPhone(): string
-    {
-        return $this->phone;
+        $this->name = $name;
+        $this->phone = $phone;
     }
 
     public static function getParentKey()
@@ -24,10 +20,9 @@ class User extends BaseEntity
         return 'city_id';
     }
 
-    public function __construct(string $name, string $phone)
+    public static function getSource(): string
     {
-        $this->name = $name;
-        $this->phone = $phone;
+        return 'users';
     }
 
     public function toArray(bool $withRelations = true): array
@@ -38,8 +33,13 @@ class User extends BaseEntity
         ];
     }
 
-    public static function getSource(): string
+    public function getName(): string
     {
-        return 'users';
+        return $this->name;
+    }
+
+    public function getPhone(): string
+    {
+        return $this->phone;
     }
 }

@@ -4,12 +4,12 @@
 Накатить:
 ```
 php ./bin/migrations migrations:execute --up 20200322113511 
---configuration=./config/migrations.yml
+ --configuration=./config/migrations.yml
 ```
 Откатить:
 ```
 php ./bin/migrations migrations:execute --down 20200322113511
-    --configuration=./config/migrations.yml
+ --configuration=./config/migrations.yml
 ```
 Описание проекта
 ========

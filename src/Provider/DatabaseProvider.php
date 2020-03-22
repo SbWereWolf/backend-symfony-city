@@ -18,11 +18,14 @@ class DatabaseProvider implements DatabaseProviderInterface
         $this->pdo = $pdo;
     }
 
-    public function insert(EntityInterface $entity, array $fields = []): ?int
+    public function insert(
+        EntityInterface $entity, array $fields = []): ?int
     {
-        $data = array_merge($entity->toArray(false), $fields);
+        $data = array_merge(
+            $entity->toArray(false), $fields);
 
-        $flag = $this->pdo->prepare($this->makeQuery($entity, array_keys($data)))
+        $flag = $this->pdo->prepare(
+            $this->makeQuery($entity, array_keys($data)))
             ->execute($data);
 
         if ($flag) {
@@ -32,13 +35,16 @@ class DatabaseProvider implements DatabaseProviderInterface
         return null;
     }
 
-    private function makeQuery(EntityInterface $entity, array $keys = []): string
+    private function makeQuery(
+        EntityInterface $entity, array $keys = []): string
     {
         return sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
             $entity::getSource(),
-            implode(',', array_map(fn($key) => '`' . $key . '`', $keys)),
-            implode(',', array_map(fn($key) => ':' . $key, $keys))
+            implode(
+                ',', array_map(fn($key) => '`' . $key . '`', $keys)),
+            implode(
+                ',', array_map(fn($key) => ':' . $key, $keys))
         );
     }
 
@@ -47,7 +53,8 @@ class DatabaseProvider implements DatabaseProviderInterface
         $this->isEntityClass($entity);
 
         /* @var EntityInterface $entity */
-        return (bool)$this->pdo->query('DELETE FROM ' . $entity::getSource());
+        return (bool)$this->pdo->query(
+            'DELETE FROM ' . $entity::getSource());
     }
 
 
