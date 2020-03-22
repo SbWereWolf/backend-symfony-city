@@ -36,7 +36,8 @@ array_map(
         App\Console\FileGeneratorCommand::class,
         App\Console\FileParserCommand::class,
         App\Services\Generator::class,
-        App\Services\Parser::class
+        App\Services\Parser::class,
+        App\Services\Reporter::class,
     ]
 );
 

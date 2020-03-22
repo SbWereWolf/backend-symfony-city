@@ -11,4 +11,15 @@ class CityDatabaseRepository extends Repository
     {
         parent::__construct($provider, $entity);
     }
+
+    public function report(string $related, string $relationKey): array
+    {
+        /* @var DatabaseProviderInterface $provider */
+        $provider = $this->provider;
+        $titleKey = $this->entity::getNameKey();
+        $source = $this->entity::getSource();
+
+        return $provider->report(
+            $source, $titleKey, $related, $relationKey);
+    }
 }

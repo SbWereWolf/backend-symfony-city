@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 namespace App\Provider;
+
 use App\Interfaces\DatabaseProviderInterface;
 use App\Interfaces\EntityInterface;
 use App\IsEntityClass;
@@ -17,7 +18,7 @@ class DatabaseProvider implements DatabaseProviderInterface
         $this->pdo = $pdo;
     }
 
-    public function insert(EntityInterface $entity, array $fields = []) : ?int
+    public function insert(EntityInterface $entity, array $fields = []): ?int
     {
         $data = array_merge($entity->toArray(false), $fields);
 
@@ -31,13 +32,13 @@ class DatabaseProvider implements DatabaseProviderInterface
         return null;
     }
 
-    private function makeQuery(EntityInterface $entity, array $keys = []) : string
+    private function makeQuery(EntityInterface $entity, array $keys = []): string
     {
         return sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
             $entity::getSource(),
-            implode(',', array_map(fn($key) => '`'.$key.'`', $keys)),
-            implode(',', array_map(fn($key) => ':'.$key, $keys))
+            implode(',', array_map(fn($key) => '`' . $key . '`', $keys)),
+            implode(',', array_map(fn($key) => ':' . $key, $keys))
         );
     }
 
@@ -46,8 +47,22 @@ class DatabaseProvider implements DatabaseProviderInterface
         $this->isEntityClass($entity);
 
         /* @var EntityInterface $entity */
-        return (bool) $this->pdo->query('DELETE FROM ' . $entity::getSource());
+        return (bool)$this->pdo->query('DELETE FROM ' . $entity::getSource());
     }
 
 
+    public function report(
+        string $source, string $titleKey,
+        string $related, string $relationKey): array
+    {
+        $data = $this->pdo
+            ->query("
+SELECT city.$titleKey as city, count(*) as amount 
+FROM $source as city 
+JOIN $related as dweller on dweller.$relationKey = city.id
+GROUP BY city.id
+")->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+    }
 }

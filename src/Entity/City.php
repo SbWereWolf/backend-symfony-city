@@ -8,7 +8,7 @@ class City extends BaseEntity
 {
     private string $name;
     private string $country;
-    /** @var User[]  */
+    /** @var User[] */
     private array $users = [];
 
     public function __construct(string $name, string $state)
@@ -27,17 +27,17 @@ class City extends BaseEntity
         return $this->country;
     }
 
-    public function attachUser(User $user) : void
+    public function attachUser(User $user): void
     {
         $this->users[] = $user;
     }
 
-    public function getUsers() : array
+    public function getUsers(): array
     {
         return $this->users;
     }
 
-    public function toArray(bool $withRelations = true) : array
+    public function toArray(bool $withRelations = true): array
     {
         $data = [
             'name' => $this->getName(),
@@ -51,8 +51,13 @@ class City extends BaseEntity
         return $data;
     }
 
-    public static function getSource() : string
+    public static function getSource(): string
     {
         return 'cities';
+    }
+
+    public static function getNameKey(): string
+    {
+        return 'name';
     }
 }

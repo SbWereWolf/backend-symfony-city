@@ -11,4 +11,14 @@ class UserDatabaseRepository extends Repository
     {
         parent::__construct($provider, $entity);
     }
+
+    public function getSource(): string
+    {
+        return $this->entity::getSource();
+    }
+
+    public function getParentKey(): string
+    {
+        return $result = $this->entity::getParentKey();
+    }
 }
